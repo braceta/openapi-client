@@ -1,4 +1,4 @@
-import { writeFileSync, join, groupOperationsByGroupName, camelToUppercase, getBestResponse } from '../util'
+import { writeFileSync, join, groupOperationsByGroupName, camelToUppercase, getBestResponse, toCamelCase } from '../util'
 import { DOC, SP, ST, getDocType, getTSParamType } from './support'
 import { renderParamSignature, renderOperationGroup, getParamName } from './genOperations'
 
@@ -39,6 +39,7 @@ function renderReduxActionBlock(spec: ApiSpec, op: ApiOperation, options: Client
   const isTs = options.language === 'ts'
   const actionStart = camelToUppercase(op.id) + '_START'
   const actionComplete = camelToUppercase(op.id)
+  const operationName = options.camelCase ? toCamelCase(op.id) : op.id 
   const infoParam = isTs ? 'info?: any' : 'info'
   let paramSignature = renderParamSignature(op, options, `${op.group}.`)
   paramSignature += `${paramSignature ? ', ' : ''}${infoParam}`
@@ -56,10 +57,10 @@ export const ${actionStart} = 's/${op.group}/${actionStart}'${ST}
 export const ${actionComplete} = 's/${op.group}/${actionComplete}'${ST}
 ${isTs ? `export type ${actionComplete} = ${returnType}${ST}`: ''}
 
-export function ${op.id}(${paramSignature})${isTs? ': any' : ''} {
+export function ${operationName}(${paramSignature})${isTs? ': any' : ''} {
   return dispatch => {
     dispatch({ type: ${actionStart}, meta: { info } })${ST}
-    return ${op.group}.${op.id}(${params})
+    return ${op.group}.${operationName}(${params})
       .then(response => dispatch({
         type: ${actionComplete},
         payload: response.data,

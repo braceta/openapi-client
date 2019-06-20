@@ -1,4 +1,4 @@
-import { writeFileSync, join, groupOperationsByGroupName, camelToUppercase, getBestResponse } from '../util'
+import { writeFileSync, join, groupOperationsByGroupName, camelToUppercase, getBestResponse, toCamelCase } from '../util'
 import { DOC, SP, ST, getDocType, getTSParamType } from './support'
 
 export default function genOperations(spec: ApiSpec, operations: ApiOperation[], options: ClientOptions) {
@@ -119,7 +119,8 @@ function renderOperationBlock(spec: ApiSpec, op: ApiOperation, options: ClientOp
 function renderOperationSignature(op: ApiOperation, options: ClientOptions): string[] {
   const paramSignature = renderParamSignature(op, options)
   const rtnSignature = renderReturnSignature(op, options)
-  return [ `export function ${op.id}(${paramSignature})${rtnSignature} {` ]
+  const operationName = options.camelCase ? toCamelCase(op.id) : op.id 
+  return [ `export function ${operationName}(${paramSignature})${rtnSignature} {` ]
 }
 
 export function renderParamSignature(op: ApiOperation, options: ClientOptions, pkg?: string): string {

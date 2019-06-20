@@ -32,6 +32,12 @@ export function camelToUppercase(value: string): string {
   return value.replace(/([A-Z]+)/g, '_$1').toUpperCase()
 }
 
+export function toCamelCase(value: string): string {
+  return value.replace(/([_][a-z])/gi, subString => {
+      return subString.toUpperCase().replace("_", "");
+  });
+};
+
 export function getBestResponse(op: ApiOperation): ApiOperationResponse {
   const NOT_FOUND = 100000
   const lowestCode = op.responses.reduce((code, resp) => {

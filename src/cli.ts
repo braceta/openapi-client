@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import * as program from 'commander'
-import * as chalk from 'chalk'
+import chalk from 'chalk'
 import { genCode } from './index'
 
 const args: any = program
@@ -12,6 +12,7 @@ const args: any = program
   .option('--redux', 'True if wanting to generate redux action creators', process.env.OPEN_API_REDUX)
   .option('--semicolon', 'True if wanting to use a semicolon statement terminator', process.env.OPEN_API_SEMICOLON)
   .option('--indent <2|4|tab>', 'Indentation to use, defaults to 2 spaces', process.env.OPEN_API_INDENT)
+  .option('--camelcase', 'Convert operation names to camelcase', process.env.OPEN_API_CAMELCASE)
   .parse(process.argv)
 
 genCode(args).then(complete, error)
