@@ -7,6 +7,17 @@ let options = {};;
 
 export function init(serviceOptions) {
 	options = serviceOptions;;
+	if(!options.abortController) {
+		options['abortController'] = new AbortController();;
+	}
+}
+
+export function getCurrentAbortController() {
+    return options.abortController;;
+}
+
+export function createAbortController() {
+    options.abortController = new AbortController();;
 }
 
 export function request(op, parameters, attempt) {
@@ -47,6 +58,7 @@ function makeFetchRequest(req) {
 		compress: true,
 		method: (req.method || 'get').toUpperCase(),
 		headers: req.headers,
+		signal: options.abortController.signal,
 		body: req.body ? JSON.stringify(req.body) : undefined
 	};;
 
