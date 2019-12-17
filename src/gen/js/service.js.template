@@ -7,13 +7,10 @@ let options = {};;
 
 export function init(serviceOptions) {
 	options = serviceOptions;;
-	if(!options.abortController) {
-		options['abortController'] = new AbortController();;
-	}
 }
 
 export function getCurrentAbortController() {
-    return options.abortController;;
+    return options.abortController ||  new AbortController();;
 }
 
 export function createAbortController() {
